@@ -1,36 +1,47 @@
-import { useState } from 'react';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import firebaseApp from '../lib/firebaseConfig';
+import { useState } from "react";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../lib/firebaseConfig"; // ✅ use named export
 
 export default function Login() {
-  const auth = getAuth(firebaseApp);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const auth = getAuth(app);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setLoading(false);
-      window.location.href = '/assessments';
+
+      // ✅ Redirect after login
+      window.location.href = "/assessments";
     } catch (err) {
-      console.error(err);
+      console.error("Login Error:", err.code, err.message);
       setLoading(false);
-      setError('❌ Login failed. Please check your credentials.');
+
+      // More descriptive error messages
+      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+        setError("❌ Invalid email or password.");
+      } else if (err.code === "auth/user-not-found") {
+        setError("❌ No account found with this email.");
+      } else {
+        setError("❌ Login failed. Please try again.");
+      }
     }
   };
 
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-4 relative bg-scroll bg-cover bg-center"
-      style={{ backgroundImage: "url('/login-bg.png')" }} // 👈 Save the generated image in /public
+      style={{ backgroundImage: "url('/login-bg.png')" }}
     >
       <Head>
         <title>Tade Autism Centre - Admin Login</title>
@@ -42,7 +53,7 @@ export default function Login() {
       </Head>
 
       {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-white/70"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full">
@@ -67,7 +78,9 @@ export default function Login() {
           </h1>
 
           {error && (
-            <p className="text-red-600 text-center text-sm mb-4 fade-in-3">{error}</p>
+            <p className="text-red-600 text-center text-sm mb-4 fade-in-3">
+              {error}
+            </p>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4 fade-in-4">
@@ -105,7 +118,10 @@ export default function Login() {
             </div>
 
             <div className="text-right text-sm">
-              <a href="/reset-password" className="text-blue-600 hover:underline">
+              <a
+                href="/reset-password"
+                className="text-blue-600 hover:underline"
+              >
                 Forgot password?
               </a>
             </div>
@@ -115,7 +131,7 @@ export default function Login() {
               disabled={loading}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 w-full rounded transition disabled:opacity-50 hover:animate-pulse"
             >
-              {loading ? 'Logging in…' : 'Login'}
+              {loading ? "Logging in…" : "Login"}
             </button>
           </form>
         </div>
