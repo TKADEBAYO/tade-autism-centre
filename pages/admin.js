@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getAuth } from 'firebase/auth';
-import app from '../lib/firebaseConfig';
+import { app } from "../lib/firebaseConfig";
 
 export default function Admin() {
   const specialistTypes = ['SALT', 'OT', 'Therapist', 'Psychologist', 'Support Worker'];
