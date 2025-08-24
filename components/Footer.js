@@ -1,4 +1,4 @@
-import { FaFacebook, FaInstagram, FaStore } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaStore, FaTiktok } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 
 export default function Footer() {
@@ -58,6 +58,19 @@ export default function Footer() {
             <FaInstagram className="text-2xl text-white" />
           </div>
           <span className="text-xs">Instagram</span>
+        </a>
+
+        {/* TikTok */}
+        <a
+          href="https://www.tiktok.com/@mumandsonakintade?lang=en"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center text-gray-300 hover:text-white transition"
+        >
+          <div className="bg-black rounded-full p-3 mb-1 hover:scale-110 transition border border-gray-700">
+            <FaTiktok className="text-2xl text-white" />
+          </div>
+          <span className="text-xs">TikTok</span>
         </a>
       </div>
 

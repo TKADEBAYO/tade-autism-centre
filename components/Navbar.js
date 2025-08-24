@@ -9,20 +9,27 @@ export default function Navbar() {
   const router = useRouter();
   const menuRef = useRef();
 
+  // ✅ Main nav structure with submenu
   const navLinks = [
     { href: '/assessments', label: 'Assessments' },
-    { href: '/directory', label: 'Directory' },
-    { href: '/ehcp', label: 'EHCP' },
     { href: '/adults', label: 'Adults' },
     { href: '/daycentres', label: 'Day Centres' },
+    {
+      label: 'Resources',
+      submenu: [
+        { href: '/directory', label: 'Directory' },
+        { href: '/ehcp', label: 'EHCP' },
+      ],
+    },
     { href: '/admin', label: 'Admin' },
     { href: '/login', label: 'Login' },
   ];
 
+  // ✅ Active link styling
   const linkClass = (path) =>
     router.pathname === path
-      ? 'text-orange-600 font-semibold relative after:block after:h-[2px] after:bg-orange-600 after:mt-1'
-      : 'hover:text-orange-500 transition-colors relative after:block after:h-[2px] after:bg-orange-500 after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 after:origin-left';
+      ? "text-orange-600 font-semibold relative after:block after:h-[2px] after:bg-orange-600 after:w-full after:transition-all after:duration-300"
+      : "hover:text-orange-500 transition-colors relative after:block after:h-[2px] after:bg-orange-500 after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 after:origin-left";
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -35,7 +42,7 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler);
   }, [isOpen]);
 
-  // Close on Esc key
+  // Close on Esc
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') setIsOpen(false);
@@ -44,7 +51,7 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Detect scroll for sticky effect
+  // Detect scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
@@ -53,9 +60,9 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white'
-      }`}
+      role="navigation"
+      className={`fixed w-full top-0 z-50 transition-all duration-300 
+        ${scrolled ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md" : "bg-white dark:bg-gray-900"}`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
@@ -73,12 +80,38 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8 font-medium text-gray-700">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClass(link.href)}>
-              {link.label}
-            </Link>
-          ))}
+        <div className="hidden md:flex items-center space-x-8 font-medium text-gray-700 dark:text-gray-200">
+          {navLinks.map((link, i) =>
+            link.submenu ? (
+              <div key={i} className="relative group">
+                <button className="hover:text-orange-500 transition-colors">
+                  {link.label} ▾
+                </button>
+                {/* Submenu */}
+                <div className="absolute hidden group-hover:block bg-white dark:bg-gray-800 shadow-lg rounded mt-2 py-2 w-40">
+                  {link.submenu.map((sublink) => (
+                    <Link
+                      key={sublink.href}
+                      href={sublink.href}
+                      aria-current={router.pathname === sublink.href ? "page" : undefined}
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      {sublink.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={router.pathname === link.href ? "page" : undefined}
+                className={linkClass(link.href)}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
           {/* CTA Button */}
           <Link
             href="/subscribe"
@@ -93,7 +126,7 @@ export default function Navbar() {
           aria-label="Toggle menu"
           aria-expanded={isOpen}
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden focus:outline-none text-3xl text-gray-700"
+          className="md:hidden focus:outline-none text-3xl text-gray-700 dark:text-gray-200"
         >
           {isOpen ? '✖' : '☰'}
         </button>
@@ -101,23 +134,41 @@ export default function Navbar() {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-end md:hidden">
+        <div className="fixed inset-0 bg-black/50 animate-fadeIn backdrop-blur-sm flex justify-end md:hidden">
           <div
             ref={menuRef}
-            className="bg-white shadow-lg w-64 h-full flex flex-col items-start py-6 px-6 animate-slideIn"
+            className="bg-white dark:bg-gray-900 shadow-lg w-64 h-full flex flex-col items-start py-6 px-6 animate-slideIn"
           >
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`${linkClass(link.href)} text-lg py-2`}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link, i) =>
+              link.submenu ? (
+                <div key={i} className="w-full">
+                  <p className="font-semibold py-2">{link.label}</p>
+                  {link.submenu.map((sublink) => (
+                    <Link
+                      key={sublink.href}
+                      href={sublink.href}
+                      aria-current={router.pathname === sublink.href ? "page" : undefined}
+                      className="block py-2 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {sublink.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={router.pathname === link.href ? "page" : undefined}
+                  className={`${linkClass(link.href)} text-lg py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
 
-            {/* CTA Button inside mobile menu */}
+            {/* CTA Button */}
             <Link
               href="/subscribe"
               className="mt-4 w-full text-center bg-orange-600 hover:bg-orange-700 text-white py-2 rounded-lg font-semibold shadow"
@@ -125,6 +176,14 @@ export default function Navbar() {
             >
               Subscribe
             </Link>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="mt-auto w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            >
+              Close Menu
+            </button>
           </div>
         </div>
       )}
@@ -143,6 +202,13 @@ export default function Navbar() {
         }
         .animate-slideIn {
           animation: slideIn 0.3s ease forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease forwards;
         }
       `}</style>
     </nav>
