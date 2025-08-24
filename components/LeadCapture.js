@@ -60,14 +60,14 @@ export default function LeadCapture({ delayMs = 8000, repeatDays = 7 }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 flex justify-center items-start z-50 p-4 overflow-y-auto"
       aria-modal="true"
       role="dialog"
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full text-left animate-fadeIn">
+      <div className="bg-white p-6 rounded-2xl shadow-2xl border border-gray-200 max-w-sm w-full text-left animate-fadeIn mt-24">
         {!success ? (
           <>
             <h2 className="text-2xl font-bold mb-2 text-orange-600">Get Your Free Autism Resource Pack</h2>
@@ -81,7 +81,7 @@ export default function LeadCapture({ delayMs = 8000, repeatDays = 7 }) {
                 placeholder="Your name"
                 value={form.name}
                 onChange={onChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400"
                 required
               />
               <input
@@ -90,7 +90,7 @@ export default function LeadCapture({ delayMs = 8000, repeatDays = 7 }) {
                 placeholder="Email address"
                 value={form.email}
                 onChange={onChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400"
                 required
               />
               <label className="flex items-start gap-2 text-sm text-gray-600">
