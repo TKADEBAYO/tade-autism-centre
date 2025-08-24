@@ -2,10 +2,23 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import LeadCapture from '../components/LeadCapture';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeIn(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen relative text-gray-900 p-6">
+    <div
+      className={`min-h-screen relative text-gray-900 p-6 transition-opacity duration-1000 ease-out ${
+        fadeIn ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      {/* Background */}
       <div className="absolute inset-0">
         <Image
           src="/hero-bg.png"
@@ -20,8 +33,7 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10">
-
+      <div className="relative z-10 pt-32"> {/* 👈 Push content down below Navbar */}
         {/* SEO Head */}
         <Head>
           <title>Tade Autism Centre - Home</title>
@@ -65,24 +77,24 @@ export default function Home() {
 
         {/* Quick Navigation Cards */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
-          <a href="/assessments" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-4">
+          <Link href="/assessments" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-4">
             <h2 className="font-semibold text-xl text-blue-700 mb-2">🧠 Child Assessments</h2>
             <p className="text-gray-700">
               Access developmental screenings and expert evaluations tailored to your child’s needs.
             </p>
-          </a>
-          <a href="/daycentres" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-5">
+          </Link>
+          <Link href="/daycentres" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-5">
             <h2 className="font-semibold text-xl text-blue-700 mb-2">🏢 Specialist Day Centres</h2>
             <p className="text-gray-700">
               Creative and supportive spaces for adults: art, literacy, tech skills, and more.
             </p>
-          </a>
-          <a href="/ehcp" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-6">
+          </Link>
+          <Link href="/ehcp" className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition fade-in-6">
             <h2 className="font-semibold text-xl text-blue-700 mb-2">📚 EHCP & Education Support</h2>
             <p className="text-gray-700">
               Get guidance, letter templates, and a Section 41 school directory to secure an EHCP for your child.
             </p>
-          </a>
+          </Link>
         </section>
 
         {/* Testimonial */}
@@ -119,7 +131,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center text-blue-800 mb-4">📰 Latest News</h2>
           <ul className="space-y-4 text-left text-gray-800">
             <li>📅 <strong>August 2025:</strong> New art therapy sessions launched at Barnet Day Centre!</li>
-            <li>🎙️ <strong>Webinar:</strong> “Understanding EHCP Timelines” – Watch the replay <a href="/events" className="text-blue-600 underline">here</a></li>
+            <li>🎙️ <strong>Webinar:</strong> “Understanding EHCP Timelines” – Watch the replay <Link href="/events" className="text-blue-600 underline">here</Link></li>
             <li>🌍 <strong>Partnership:</strong> Tade Centre is now listed with the National Autism Network.</li>
           </ul>
         </section>
@@ -152,12 +164,12 @@ export default function Home() {
         <section className="text-center my-16 fade-in-14">
           <h3 className="text-2xl font-bold text-blue-800 mb-2">Need Personal Support?</h3>
           <p className="mb-4 text-lg">Book a free 15-minute call or message us about assessments, EHCPs or therapy.</p>
-          <a
+          <Link
             href="/contact"
             className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded transition font-semibold"
           >
             Contact Us Today
-          </a>
+          </Link>
         </section>
 
         {/* Newsletter Signup */}
@@ -168,7 +180,7 @@ export default function Home() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="p-3 rounded border border-gray-300 w-full sm:w-auto flex-1"
+              className="p-3 rounded border border-gray-300 w-full sm:w-auto flex-1 bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-300 transition"
             />
             <button
               type="submit"

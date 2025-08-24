@@ -37,7 +37,7 @@ export default function Assessments() {
       {/* Overlay */}
       <div className="absolute inset-0 bg-white/60"></div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 pt-32"> {/* 👈 pushes content below navbar */}
         <Head>
           <title>Tade Autism Centre - Assessments</title>
         </Head>

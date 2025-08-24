@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function EHCP() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 text-gray-900 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 text-gray-900 px-4 relative">
       <Head>
         <title>Tade Autism Centre - EHCP & Educational Support</title>
         <meta
@@ -13,21 +13,22 @@ export default function EHCP() {
         />
       </Head>
 
-      {/* Logo Section */}
-      <div className="flex justify-center mb-6 fade-in-1">
-        <Link href="/" aria-label="Go to homepage">
-          <Image
-            src="/Tade_Autism_Centre.png"
-            alt="Tade Autism Centre Logo"
-            width={120}
-            height={120}
-            className="rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
-            priority
-          />
-        </Link>
-      </div>
+      {/* Page Content with padding so it clears the fixed navbar */}
+      <div className="relative z-10 pt-32 max-w-5xl mx-auto">
+        {/* Logo Section */}
+        <div className="flex justify-center mb-6 fade-in-1">
+          <Link href="/" aria-label="Go to homepage">
+            <Image
+              src="/Tade_Autism_Centre.png"
+              alt="Tade Autism Centre Logo"
+              width={120}
+              height={120}
+              className="rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
+              priority
+            />
+          </Link>
+        </div>
 
-      <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-blue-800 mb-6 fade-in-2">
           EHCP & Educational Support
         </h1>
@@ -62,7 +63,12 @@ export default function EHCP() {
         <div className="mt-16 max-w-4xl mx-auto fade-in-5">
           <h3 className="text-2xl font-bold text-blue-800 mb-6 text-center">🗂 EHCP Process Timeline</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[{ step: 'Week 0', label: 'Request Submitted' }, { step: 'Week 6', label: 'Assessment Decision' }, { step: 'Week 12', label: 'Draft Plan' }, { step: 'Week 20', label: 'Final EHCP Issued' }].map(({ step, label }) => (
+            {[
+              { step: 'Week 0', label: 'Request Submitted' },
+              { step: 'Week 6', label: 'Assessment Decision' },
+              { step: 'Week 12', label: 'Draft Plan' },
+              { step: 'Week 20', label: 'Final EHCP Issued' },
+            ].map(({ step, label }) => (
               <div key={step} className="bg-white p-4 rounded shadow hover:scale-105 transition-transform duration-300">
                 <p className="text-blue-800 font-bold">{step}</p>
                 <p>{label}</p>

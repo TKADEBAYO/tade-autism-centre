@@ -28,9 +28,9 @@ export default function Adults() {
         />
       </Head>
 
-      {/* Background wrapper */}
+       {/* Background wrapper */}
       <div
-        className="min-h-screen relative text-gray-900 py-16 px-4"
+        className="min-h-screen relative text-gray-900 px-4"
         style={{
           backgroundImage: "url('/autistic-adults-bg.png')",
           backgroundSize: "cover",
@@ -42,7 +42,9 @@ export default function Adults() {
         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
 
         {/* Page Content */}
-        <div className="relative z-10 max-w-6xl mx-auto font-sans">
+        <div className="relative z-10 max-w-6xl mx-auto font-sans pt-32 md:pt-40">
+          {/* 👆 Added pt-32 so logo/heading sit below fixed navbar */}
+
           {/* Logo */}
           <div className="flex justify-center mb-8 fade-in-1">
             <Link href="/" aria-label="Go to homepage">
@@ -56,6 +58,7 @@ export default function Adults() {
               />
             </Link>
           </div>
+
 
           <h1 className="text-4xl font-bold text-center mb-6 text-blue-900 fade-in-2">
             Support for Autistic Adults

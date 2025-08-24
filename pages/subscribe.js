@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeIn(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   const startCheckout = async (plan) => {
     setLoading(true);
@@ -39,16 +45,18 @@ export default function Subscribe() {
       </Head>
 
       <div
-        className="min-h-screen text-gray-900 py-16 px-4 relative bg-fixed bg-cover bg-center"
+        className={`min-h-screen text-gray-900 px-4 relative bg-fixed bg-cover bg-center transition-opacity duration-1000 ease-out ${
+          fadeIn ? 'opacity-100' : 'opacity-0'
+        }`}
         style={{ backgroundImage: "url('/subscribe-bg.png')" }}
       >
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-white/70"></div>
 
         {/* Content */}
-        <div className="relative z-10">
-          {/* Logo at the top */}
-          <div className="flex justify-center mb-6 fade-in-1">
+        <div className="relative z-10 pt-32"> {/* 👈 padding to clear navbar */}
+          {/* Logo */}
+          <div className={`flex justify-center mb-6 ${fadeIn ? 'fade-in-1' : ''}`}>
             <Link href="/" aria-label="Go to homepage">
               <Image
                 src="/Tade_Autism_Centre.png"

@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function DayCentres() {
   return (
     <div
-      className="min-h-screen text-gray-900 py-12 px-4 relative bg-scroll bg-cover bg-center"
+      className="min-h-screen text-gray-900 relative bg-scroll bg-cover bg-center"
       style={{ backgroundImage: "url('/daycentres-bg.png')" }} // background scrolls with page
     >
       <Head>
@@ -16,7 +16,7 @@ export default function DayCentres() {
       <div className="absolute inset-0 bg-white/70"></div>
 
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 pt-32 px-4"> {/* 👈 Add pt-32 so it clears navbar */}
         {/* Logo Section */}
         <div className="flex justify-center mb-6 fade-in-1">
           <Link href="/" aria-label="Go to homepage">

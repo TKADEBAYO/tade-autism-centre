@@ -42,15 +42,14 @@ export default function Directory() {
       </Head>
 
       <div
-  className="min-h-screen py-12 px-4 text-gray-900 relative bg-fixed bg-cover bg-center"
-  style={{ backgroundImage: "url('/directory-bg.png')" }}
->
-  {/* Polished Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/80 backdrop-blur-sm"></div>
-
+        className="min-h-screen py-12 px-4 text-gray-900 relative bg-fixed bg-cover bg-center"
+        style={{ backgroundImage: "url('/directory-bg.png')" }}
+      >
+        {/* Polished Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/80 backdrop-blur-sm"></div>
 
         {/* Content */}
-        <div className="relative z-10">
+        <div className="relative z-10 pt-32"> {/* 👈 Add padding-top so logo/content clears navbar */}
           {/* Logo */}
           <div className="flex justify-center mb-8 fade-in-1">
             <Link href="/" aria-label="Go to homepage">

@@ -91,35 +91,35 @@ export default function Admin() {
 
   return (
     <div
-      className={`min-h-screen relative py-12 px-4 text-gray-900 transition-opacity duration-1000 ease-out ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
-      style={{
-        backgroundImage: "url('/admin-bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/40"></div>
+  className={`min-h-screen relative py-12 px-4 text-gray-900 transition-opacity duration-1000 ease-out ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
+  style={{
+    backgroundImage: "url('/admin-bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
+  }}
+>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-white/40"></div>
 
-      <div className="relative z-10">
-        <Head>
-          <title>Tade Autism Centre - Admin Panel</title>
-        </Head>
+  <div className="relative z-10 pt-32"> {/* 👈 add pt-32 so content starts below navbar */}
+    <Head>
+      <title>Tade Autism Centre - Admin Panel</title>
+    </Head>
 
-        {/* Logo */}
-        <div className={`flex justify-center mb-6 ${fadeIn ? 'fade-in-1' : ''}`}>
-          <Link href="/" aria-label="Go to homepage">
-            <Image
-              src="/Tade_Autism_Centre.png"
-              alt="Tade Autism Centre Logo"
-              width={120}
-              height={120}
-              className="rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
-              priority
-            />
-          </Link>
-        </div>
+    {/* Logo */}
+    <div className={`flex justify-center mb-6 ${fadeIn ? 'fade-in-1' : ''}`}>
+      <Link href="/" aria-label="Go to homepage">
+        <Image
+          src="/Tade_Autism_Centre.png"
+          alt="Tade Autism Centre Logo"
+          width={120}
+          height={120}
+          className="rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
+          priority
+        />
+      </Link>
+    </div>
 
         {/* Form */}
         <div className={`max-w-xl mx-auto bg-white/80 backdrop-blur-md p-6 rounded-lg shadow-md ${fadeIn ? 'fade-in-2' : ''}`}>

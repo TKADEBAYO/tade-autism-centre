@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeIn(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,7 +33,6 @@ export default function Login() {
       console.error("Login Error:", err.code, err.message);
       setLoading(false);
 
-      // More descriptive error messages
       if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
         setError("❌ Invalid email or password.");
       } else if (err.code === "auth/user-not-found") {
@@ -40,7 +45,9 @@ export default function Login() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 relative bg-scroll bg-cover bg-center"
+      className={`min-h-screen flex flex-col items-center justify-center px-4 relative bg-scroll bg-cover bg-center transition-opacity duration-1000 ease-out ${
+        fadeIn ? "opacity-100" : "opacity-0"
+      }`}
       style={{ backgroundImage: "url('/login-bg.png')" }}
     >
       <Head>
@@ -56,7 +63,7 @@ export default function Login() {
       <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center w-full">
+      <div className="relative z-10 flex flex-col items-center w-full pt-32">
         {/* Logo */}
         <div className="mb-6 fade-in-1">
           <Link href="/" aria-label="Go to homepage">
@@ -92,7 +99,7 @@ export default function Login() {
                 id="email"
                 type="email"
                 placeholder="Enter email"
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full p-3 border border-gray-300 rounded bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-400 transition"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -110,7 +117,7 @@ export default function Login() {
                 id="password"
                 type="password"
                 placeholder="Enter password"
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full p-3 border border-gray-300 rounded bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-400 transition"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
