@@ -10,8 +10,8 @@ export default async function handler(req, res) {
   const { plan } = req.body;
 
   const priceId = plan === 'monthly'
-    ? 'price_1MONTHLY_ID' // Replace with real monthly price ID from Stripe
-    : 'price_1YEARLY_ID'; // Replace with real yearly price ID from Stripe
+    ? 'price_1S19FFF630AAi1zS4NmTJlsk' // Replace with real monthly price ID from Stripe
+    : 'price_1S19TCF630AAi1zSC9N0Ywjt'; // Replace with real yearly price ID from Stripe
 
   try {
     const session = await stripe.checkout.sessions.create({
