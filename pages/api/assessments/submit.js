@@ -1,8 +1,9 @@
+// pages/api/assessments/submit.js
 import { connectToDatabase } from '../../../lib/mongodb';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer';
 
-// Define schema once
+// --- Schema ---
 const AssessmentSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -16,13 +17,13 @@ const AssessmentSchema = new mongoose.Schema(
   { collection: 'assessments' }
 );
 
-// Prevent recompilation in dev hot reload
+// Prevent model recompile in dev/hot-reload
 const Assessment =
   mongoose.models.Assessment || mongoose.model('Assessment', AssessmentSchema);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).end('Method Not Allowed');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
@@ -30,12 +31,13 @@ export default async function handler(req, res) {
 
     const { name, age, concerns, parentEmail, parentPhone, preferredDate } = req.body;
 
+    // ✅ Validation
     if (!name || !age || !concerns) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Save to MongoDB
-    await Assessment.create({
+    // ✅ Save to MongoDB
+    const newDoc = await Assessment.create({
       name,
       age,
       concerns,
@@ -44,43 +46,43 @@ export default async function handler(req, res) {
       preferredDate,
     });
 
-    // --- ✉️ Send confirmation email ---
+    // ✅ Send confirmation email if parentEmail exists
     if (parentEmail) {
       const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        secure: true, // true for port 465
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // STARTTLS
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: process.env.EMAIL_SERVER_USER,     // e.g. tkmaxxs123@gmail.com
+          pass: process.env.EMAIL_SERVER_PASSWORD, // Gmail App Password
         },
       });
 
-      const mailOptions = {
+      await transporter.sendMail({
         from: process.env.EMAIL_FROM,
         to: parentEmail,
-        subject: "Assessment Submitted - Tade Autism Centre",
+        subject: 'Assessment Submitted - Tade Autism Centre',
         html: `
-          <h2>Thank you for submitting your child's assessment</h2>
+          <h2>✅ Thank you for your submission</h2>
           <p>Dear Parent/Carer,</p>
-          <p>We have received your request for an autism assessment.</p>
-          <p><strong>Child's Name:</strong> ${name}</p>
-          <p><strong>Age:</strong> ${age}</p>
-          <p><strong>Concerns:</strong> ${concerns}</p>
-          <p><strong>Preferred Contact Date:</strong> ${preferredDate || 'Not provided'}</p>
-          <br/>
-          <p>Our team will review the details and contact you soon.</p>
+          <p>We have received your assessment request:</p>
+          <ul>
+            <li><strong>Child's Name:</strong> ${name}</li>
+            <li><strong>Age:</strong> ${age}</li>
+            <li><strong>Concerns:</strong> ${concerns}</li>
+            <li><strong>Preferred Contact Date:</strong> ${preferredDate || 'Not provided'}</li>
+          </ul>
+          <p>Our team will contact you soon.</p>
           <p>Kind regards,</p>
           <p><strong>Tade Autism Centre</strong></p>
         `,
-      };
-
-      await transporter.sendMail(mailOptions);
+      });
     }
 
-    res.status(200).json({ success: true });
+    // ✅ Response
+    res.status(200).json({ success: true, data: newDoc });
   } catch (error) {
-    console.error('Assessment submit error:', error);
+    console.error('❌ Assessment submit error:', error.message);
     res.status(500).json({ error: 'Failed to save assessment.' });
   }
 }
