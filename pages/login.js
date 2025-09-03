@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../lib/firebaseConfig"; // ✅ use named export
+import { app } from "../lib/firebaseConfig"; // ✅ named export
 
 export default function Login() {
   const auth = getAuth(app);
@@ -18,16 +18,26 @@ export default function Login() {
     return () => clearTimeout(timer);
   }, []);
 
+  // ✅ Restrict login to specific admins only
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      // ✅ Redirect after login
+      // ✅ Only allow these emails
+      const allowedAdmins = ["folukt3@gmail.com"];
+
+      if (!allowedAdmins.includes(user.email)) {
+        setError("❌ You are not authorised to access the admin panel.");
+        setLoading(false);
+        return;
+      }
+
+      // ✅ Success → redirect
       window.location.href = "/assessments";
     } catch (err) {
       console.error("Login Error:", err.code, err.message);
@@ -59,7 +69,7 @@ export default function Login() {
         />
       </Head>
 
-      {/* Overlay for readability */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Content */}

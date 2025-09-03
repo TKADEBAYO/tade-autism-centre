@@ -228,6 +228,14 @@ export default function Admin() {
               </button>
             </div>
           </form>
+           <div className="text-center mt-6">
+            <Link
+              href="/admin/assessments"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold shadow transition hover:scale-105"
+            >
+              View Submitted Assessments →
+            </Link>
+          </div>
         </div>
       </div>
 

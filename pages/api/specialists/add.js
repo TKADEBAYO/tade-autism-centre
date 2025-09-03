@@ -1,7 +1,7 @@
 import { connectToDatabase } from '../../../lib/mongodb';
 import validator from 'validator';
 import { getAuth } from 'firebase-admin/auth';
-import adminApp from '../../../lib/firebaseAdmin'; // we’ll create this for Firebase Admin
+import adminApp from '../../../lib/firebaseAdmin'; // ✅ our Firebase Admin SDK
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -14,15 +14,18 @@ export default async function handler(req, res) {
     if (!authHeader) {
       return res.status(401).json({ error: 'No auth token provided' });
     }
+
     const token = authHeader.split(' ')[1];
     const decoded = await getAuth(adminApp).verifyIdToken(token);
 
-    // Check if user has admin role
-    if (!decoded.admin) {
+    // ✅ Restrict by email instead of claims
+    const allowedAdmins = ["folukt3@gmail.com"]; // Add more later if needed
+    if (!allowedAdmins.includes(decoded.email)) {
       return res.status(403).json({ error: 'Not authorised' });
     }
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
+    console.error("Auth error:", err);
+    return res.status(401).json({ error: 'Invalid or expired token' });
   }
 
   // 🔹 2. Extract and Validate Data
@@ -40,7 +43,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid phone number' });
   }
 
-  // Optional: restrict length to avoid huge inputs
   if (name.length > 100 || location.length > 200) {
     return res.status(400).json({ error: 'Input too long' });
   }
@@ -58,9 +60,9 @@ export default async function handler(req, res) {
       createdAt: new Date()
     });
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to add specialist.' });
+    console.error("DB error:", error);
+    return res.status(500).json({ error: 'Failed to add specialist.' });
   }
 }
