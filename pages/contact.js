@@ -3,11 +3,36 @@ import Head from "next/head";
 
 export default function Contact() {
   const [fadeIn, setFadeIn] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => setFadeIn(true), 50);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("Sending...");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        setStatus("✅ Message sent successfully!");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus("❌ Failed to send. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("❌ Error sending message.");
+    }
+  };
 
   return (
     <div
@@ -29,47 +54,45 @@ export default function Contact() {
       <div className="relative z-10 pt-32 px-6">
         <Head>
           <title>Contact Us - Tade Autism Centre</title>
-          <meta
-            name="description"
-            content="Contact Tade Autism Centre to learn more about our programmes, services, and support options."
-          />
         </Head>
 
-        <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-8 fade-in-1">
-          <h1 className="text-3xl font-bold text-blue-900 mb-6 text-center fade-in-2">
+        <div className="max-w-3xl mx-auto bg-white/90 rounded-xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-blue-900 mb-6 text-center">
             📩 Contact Us
           </h1>
-          <p className="text-center mb-6 text-gray-600 fade-in-3">
-            Have questions about our day centres, programmes, or services? Fill in the form
-            below and our team will be in touch.
-          </p>
-
-          <form className="space-y-4 fade-in-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
               placeholder="Your Name"
-              className="w-full p-3 border border-gray-300 rounded bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-400 transition"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
+              className="w-full p-3 border border-gray-300 rounded"
             />
             <input
               type="email"
               placeholder="Your Email"
-              className="w-full p-3 border border-gray-300 rounded bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-400 transition"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
+              className="w-full p-3 border border-gray-300 rounded"
             />
             <textarea
               placeholder="Your Message"
               rows="5"
-              className="w-full p-3 border border-gray-300 rounded bg-white/80 focus:bg-white focus:ring-2 focus:ring-blue-400 transition"
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
               required
+              className="w-full p-3 border border-gray-300 rounded"
             ></textarea>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold fade-in-5"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
             >
               Send Message
             </button>
           </form>
+          {status && <p className="mt-4 text-center">{status}</p>}
         </div>
       </div>
     </div>
